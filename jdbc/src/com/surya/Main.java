@@ -1,14 +1,14 @@
 package com.surya;
+import java.io.IOException;
 import java.sql.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, InputMismatchException {
         Scanner st = new Scanner(System.in);
         Scanner str = new Scanner(System.in);
-
         // Display instructions to user
         String user = getInput(str, "Enter your Database user name:");
         String pwd = getInput(str, "Enter your Database password:");
@@ -67,32 +67,39 @@ public class Main {
                 case 2:
                     int cha = -1;
                     do {
-                        System.out.println("Enter '1' to create table:");
-                        System.out.println("Enter '2' to delete table:");
-                        System.out.println("Enter '0' to back to Main menu");
-                        cha = str.nextInt();
-                        str.nextLine(); // Clear the buffer
-                        switch (cha) {
-                            case 1:
-                                System.out.println("Enter the name of the database to USE:");
-                                String usename = str.nextLine();
-                                Table t = new Table(db, usename);
-                                t.createTable();
-                                break;
-                            case 2:
-                                System.out.println("Enter the name of the database to USE:");
-                                String usname = str.nextLine();
-                                Table t1 = new Table(db, usname);
-                                t1.deleteTable();
-                                break;
-                            case 0:
-                                System.out.println("Back to Main menu...");
-                                break;
-                            default:
-                                System.out.println("Invalid choice");
+                        try {
+                            System.out.println("Enter '1' to create table:");
+                            System.out.println("Enter '2' to delete table:");
+                            System.out.println("Enter '0' to back to Main menu");
+                            cha = str.nextInt();
+                            str.nextLine(); // Clear the buffer
+
+                            switch (cha) {
+                                case 1:
+                                    System.out.println("Enter the name of the database to USE:");
+                                    String usename = str.nextLine();
+                                    Table t = new Table(db, usename);
+                                    t.createTable();
+                                    break;
+                                case 2:
+                                    System.out.println("Enter the name of the database to USE:");
+                                    String usname = str.nextLine();
+                                    Table t1 = new Table(db, usname);
+                                    t1.deleteTable();
+                                    break;
+                                case 0:
+                                    System.out.println("Back to Main menu...");
+                                    break;
+                                default:
+                                    System.out.println("Invalid choice");
+                            }
+                        } catch (InputMismatchException e) {
+                            System.out.println("Invalid input. Please enter a number.");
+                            str.nextLine(); // Clear the invalid input
                         }
                     } while (cha != 0);
                     break;
+
                 case 3:
                     System.out.println("Enter the name of the Database to USE:");
                     String DBtoUse = str.nextLine();
@@ -107,7 +114,7 @@ public class Main {
                     break;
                 case 0:
                     System.out.println("Exiting...");
-                    break;
+                    System.exit(0);
                 default:
                     System.out.println("Invalid choice. Please enter a valid option.");
             }
